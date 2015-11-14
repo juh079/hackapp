@@ -25,4 +25,33 @@ router.get('/newuser',function(req,res){
 	res.render('newuser',{title:'Add New User'});
 });
 
+/*POST to Add User Service */
+router.post('/adduser',function(req,res){
+
+	//Set out internal DB variable
+	var db = req.db;
+
+	//Get out form value. These rely on the "name" attributes
+	var userName = req.body.username;
+	var userEmail = req.body.useremail;
+
+	//Set our collection
+	var collection = db.get("usercollection");
+
+	//submit to the DB
+	collection.insert({
+		"username":userName,
+		"email":userEmail
+	}, function(err,doc){
+		if(err){
+			//if it failed, return error
+			res.send("There was a problem adding the info to the database!");
+		}
+		else{
+			//And forward to success page
+			res.redirect("userlist");
+		}
+	});
+});
+
 module.exports = router;
